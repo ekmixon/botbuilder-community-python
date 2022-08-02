@@ -48,16 +48,15 @@ class NumberWithUnitPrompt(Prompt):
         options: PromptOptions, 
         is_retry: bool, 
     ):
-        if not turn_context:
-            raise TypeError("turn_context can’t  be none")
-        if not options:
-            raise TypeError("options can’t  be none")
+         if not turn_context:
+             raise TypeError("turn_context can’t  be none")
+         if not options:
+             raise TypeError("options can’t  be none")
 
-        if is_retry and options.retry_prompt is not None:
-            await turn_context.send_activity(options.retry_prompt)
-        else:
-            if options.prompt is not None:
-                await turn_context.send_activity(options.prompt)
+         if is_retry and options.retry_prompt is not None:
+              await turn_context.send_activity(options.retry_prompt)
+         elif options.prompt is not None:
+              await turn_context.send_activity(options.prompt)
 
     async def on_recognize(
         self, 
@@ -70,9 +69,9 @@ class NumberWithUnitPrompt(Prompt):
 
         if turn_context.activity.type == ActivityTypes.message:
             utterance = turn_context.activity.text
-            
+
             turn_context.activity.locale = self._default_locale 
-            
+
             recognizer_result = PromptRecognizerResult()        
 
             recognizer = NumberWithUnitRecognizer(turn_context.activity.locale)
@@ -94,5 +93,5 @@ class NumberWithUnitPrompt(Prompt):
                     model_result[0].resolution["unit"], 
                     model_result[0].resolution["value"]
                     )
-        
+
             return recognizer_result

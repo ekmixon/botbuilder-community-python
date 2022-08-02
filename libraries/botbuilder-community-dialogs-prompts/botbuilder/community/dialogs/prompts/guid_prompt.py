@@ -26,9 +26,8 @@ class GuidPrompt (Prompt):
 
         if is_retry and options.retry_prompt is not None:
             await turn_context.send_activity(options.retry_prompt)
-        else:
-            if options.prompt is not None:
-                await turn_context.send_activity(options.prompt)
+        elif options.prompt is not None:
+            await turn_context.send_activity(options.prompt)
 
     async def on_recognize( self,
             turn_context: TurnContext,
@@ -39,14 +38,14 @@ class GuidPrompt (Prompt):
 
         if turn_context.activity.type == ActivityTypes.message:
             utterance = turn_context.activity.text
-            
+
             turn_context.activity.locale = self._defaultLocale
 
             recognizer_result = PromptRecognizerResult()
 
             mode = SequenceRecognizer(turn_context.activity.locale)
             model = mode.get_guid_model()
-        
+
             model_result = model.parse(utterance)
 
             if len(model_result) > 0 and len(model_result[0].resolution) > 0:

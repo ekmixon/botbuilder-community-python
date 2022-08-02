@@ -33,9 +33,8 @@ class EmailPrompt (Prompt):
 
         if is_retry and options.retry_prompt is not None:
             await turn_context.send_activity(options.retry_prompt)
-        else:
-            if options.prompt is not None:
-                await turn_context.send_activity(options.prompt)
+        elif options.prompt is not None:
+            await turn_context.send_activity(options.prompt)
 
     async def on_recognize(self,
         turn_context: TurnContext, 
