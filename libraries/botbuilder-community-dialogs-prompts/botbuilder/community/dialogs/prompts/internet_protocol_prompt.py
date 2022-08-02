@@ -30,16 +30,15 @@ class InternetProtocolPrompt(Prompt):
         state: Dict[str, object], 
         options: PromptOptions, 
         is_retry: bool):
-          if not turn_context:
-              raise TypeError("turn_context Can’t  be none")
-          if not options:
-              raise TypeError("options Can’t  be none")
-    
-          if is_retry and options.retry_prompt is not None:
-              await turn_context.send_activity(options.retry_prompt)
-          else:
-              if options.prompt is not None:
-                 await turn_context.send_activity(options.prompt)
+        if not turn_context:
+            raise TypeError("turn_context Can’t  be none")
+        if not options:
+            raise TypeError("options Can’t  be none")
+
+        if is_retry and options.retry_prompt is not None:
+            await turn_context.send_activity(options.retry_prompt)
+        elif options.prompt is not None:
+            await turn_context.send_activity(options.prompt)
 
     async def on_recognize(self,
         turn_context: TurnContext, 
@@ -51,9 +50,9 @@ class InternetProtocolPrompt(Prompt):
 
         if turn_context.activity.type == ActivityTypes.message:
             utterance = turn_context.activity.text
-        
+
             turn_context.activity.locale = self._defaultLocale 
-        
+
             recognizer_result = PromptRecognizerResult()
             mode = SequenceRecognizer(turn_context.activity.locale)
 
@@ -61,10 +60,10 @@ class InternetProtocolPrompt(Prompt):
                 model = mode.get_ip_address_model()
             elif (self._promptType == InternetProtocolPromptType.URL):
                 model = mode.get_url_model()
-        
+
             model_result = model.parse(utterance)
             if len(model_result) > 0 and len(model_result[0].resolution) > 0:
                 recognizer_result.succeeded = True
                 recognizer_result.value = model_result[0].resolution["value"]
-            
+
             return recognizer_result
