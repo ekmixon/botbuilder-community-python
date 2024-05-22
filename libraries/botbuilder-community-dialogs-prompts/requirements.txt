@@ -3,3 +3,4 @@ botbuilder-core>=4.5.0b5
 botbuilder-schema>=4.5.0b5
 botbuilder-dialogs>=4.5.0b5
 recognizers_text_suite>=1.0.2a2
+requests>=2.32.0 # not directly required, pinned by Snyk to avoid a vulnerability
